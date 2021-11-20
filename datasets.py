@@ -17,7 +17,8 @@ import torchvision.transforms as transforms
 import os
 import json
 
-
+from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
+from dataset.wilds_dataset import GeneralWilds_Batched_Dataset
 try:
     from IPython import embed
 except:
@@ -343,8 +344,37 @@ def stl10(root):
     testset.targets = testset.labels
     return trainset, testset
 
+@_add_dataset
+def Camelyon17(root):
+
+    dataset = Camelyon17Dataset(root_dir=root, download=True)
+    transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225])
+        ])
+    
+    train_data = dataset.get_subset('train', transform=transform)
+    val_data = dataset.get_subset('val', transform=transform)
+    test_data = dataset.get_subset('test', transform=transform)
+
+    
+    zero_domain_train = GeneralWilds_Batched_Dataset(train_data, 0, 32, domain_idx=0)
+    third_domain_train = GeneralWilds_Batched_Dataset(train_data, 3, 32, domain_idx=0)
+    forth_domain_train = GeneralWilds_Batched_Dataset(train_data, 4, 32, domain_idx=0)
+
+    second_domain_test = GeneralWilds_Batched_Dataset(test_data, 2, 32, domain_idx=0)
+    first_domain_val = GeneralWilds_Batched_Dataset(val_data, 1, 32, domain_idx=0)
+
+    
+
+    return zero_domain_train, third_domain_train, forth_domain_train, second_domain_test, first_domain_val
+
+
+
 
 def get_dataset(root, config=None):
-    return _DATASETS[config.name](os.path.expanduser(root), config)
+    return _DATASETS[config.name](os.path.expanduser(root))
 
 

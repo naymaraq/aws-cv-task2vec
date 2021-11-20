@@ -199,7 +199,7 @@ def cdist(from_embeddings, to_embeddings, distance='cosine'):
     return distance_matrix
 
 
-def plot_distance_matrix(embeddings, labels=None, distance='cosine'):
+def plot_distance_matrix(embeddings, labels=None, distance='cosine', save=True):
     import seaborn as sns
     from scipy.cluster.hierarchy import linkage
     from scipy.spatial.distance import squareform
@@ -211,6 +211,8 @@ def plot_distance_matrix(embeddings, labels=None, distance='cosine'):
     if labels is not None:
         distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
     sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
+    if save:
+        plt.savefig('demo.png')
     plt.show()
 
 

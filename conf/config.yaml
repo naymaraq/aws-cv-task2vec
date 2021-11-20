@@ -18,9 +18,9 @@ defaults:
   - task2vec: montecarlo
 
 dataset:
-  name: inat2018
+  name: Camelyon17
   task_id: 0
-  root: ~/data
+  root: /home/dqaramyan/Desktop/aws-cv-task2vec/wilds
 
 # Probe network to use
 model:

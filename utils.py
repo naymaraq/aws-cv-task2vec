@@ -14,7 +14,15 @@
 from collections import defaultdict
 import torch
 import numpy as np
+from omegaconf import OmegaConf
 
+def read_yaml(config_path):
+    conf = OmegaConf.load(config_path)
+    return conf
+
+
+def write_yaml(conf, yaml_path):
+    OmegaConf.save(config=conf, f=yaml_path)
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
