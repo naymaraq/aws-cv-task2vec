@@ -31,19 +31,19 @@ class GeneralWilds_Batched_Dataset(Dataset):
 
         
         flags = self.domains==nth_domain
-        self.nth_data = [self.data[i] for i,_ in enumerate(self.data) if flags[i]]
-        self.nth_targets = self.targets[self.domains==nth_domain]
-        self.nth_domains = self.domains[self.domains==nth_domain]
+        self.data = [self.data[i] for i,_ in enumerate(self.data) if flags[i]]
+        self.targets = self.targets[self.domains==nth_domain]
+        self.domains = self.domains[self.domains==nth_domain]
         
     def get_input(self, idx):
         """Returns x for a given idx."""
 
-        img_path = f'{self.data_dir}/{self.nth_data[idx]}'
+        img_path = f'{self.data_dir}/{self.data[idx]}'
         img = Image.open(img_path).convert('RGB')
         return img
 
     def __getitem__(self, idx):
-        return self.transform(self.get_input(idx)), self.nth_targets[idx]
+        return self.transform(self.get_input(idx)), self.targets[idx]
 
     def __len__(self):
-        return len(self.nth_targets)
+        return len(self.targets)

@@ -354,8 +354,20 @@ def Camelyon17(root):
             transforms.Normalize([0.485, 0.456, 0.406],
                                  [0.229, 0.224, 0.225])
         ])
+
+    aug_transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ColorJitter(),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406],
+                             [0.229, 0.224, 0.225])
+    ])
     
     train_data = dataset.get_subset('train', transform=transform)
+    train_data_aug = dataset.get_subset('train', transform=aug_transform)
+
     val_data = dataset.get_subset('val', transform=transform)
     test_data = dataset.get_subset('test', transform=transform)
 
@@ -363,16 +375,22 @@ def Camelyon17(root):
     zero_domain_train = GeneralWilds_Batched_Dataset(train_data, 0, 32, domain_idx=0)
     third_domain_train = GeneralWilds_Batched_Dataset(train_data, 3, 32, domain_idx=0)
     forth_domain_train = GeneralWilds_Batched_Dataset(train_data, 4, 32, domain_idx=0)
+    zero_domain_train_aug = GeneralWilds_Batched_Dataset(train_data_aug, 0, 32, domain_idx=0)
+    third_domain_train_aug = GeneralWilds_Batched_Dataset(train_data_aug, 3, 32, domain_idx=0)
+    forth_domain_train_aug = GeneralWilds_Batched_Dataset(train_data_aug, 4, 32, domain_idx=0)
 
     second_domain_test = GeneralWilds_Batched_Dataset(test_data, 2, 32, domain_idx=0)
     first_domain_val = GeneralWilds_Batched_Dataset(val_data, 1, 32, domain_idx=0)
 
     
-
-    return zero_domain_train, third_domain_train, forth_domain_train, second_domain_test, first_domain_val
-
-
-
+    return (zero_domain_train, 
+            third_domain_train, 
+            forth_domain_train,
+            zero_domain_train_aug,
+            third_domain_train_aug,
+            forth_domain_train_aug,
+            second_domain_test, 
+            first_domain_val)
 
 def get_dataset(root, config=None):
     return _DATASETS[config.name](os.path.expanduser(root))

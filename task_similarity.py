@@ -210,7 +210,14 @@ def plot_distance_matrix(embeddings, labels=None, distance='cosine', save=True):
     linkage_matrix = linkage(cond_distance_matrix, method='complete', optimal_ordering=True)
     if labels is not None:
         distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
-    sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
+    
+    print(distance_matrix)
+    sns.clustermap(distance_matrix, 
+                  row_linkage=linkage_matrix, 
+                  col_linkage=linkage_matrix, 
+                  annot = distance_matrix,
+                  cmap='viridis_r')
+    # sns.heatmap(distance_matrix, annot=True)
     if save:
         plt.savefig('demo.png')
     plt.show()
