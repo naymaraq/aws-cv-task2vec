@@ -199,6 +199,11 @@ def cdist(from_embeddings, to_embeddings, distance='cosine'):
     return distance_matrix
 
 
+def get_distance_matrix(embeddings, labels=None, distance='cosine'):
+    distance_matrix = pdist(embeddings, distance=distance)
+    return distance_matrix
+
+
 def plot_distance_matrix(embeddings, labels=None, distance='cosine', save=True):
     import seaborn as sns
     from scipy.cluster.hierarchy import linkage
