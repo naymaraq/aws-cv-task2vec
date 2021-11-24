@@ -16,7 +16,7 @@ import torch.utils.model_zoo as model_zoo
 
 import torchvision.models.resnet as resnet
 import torch
-
+from torchvision import models
 from task2vec import ProbeNetwork
 
 _MODELS = {}
@@ -82,6 +82,16 @@ def resnet34(pretrained=False, num_classes=1000):
         state_dict = {k: v for k, v in state_dict.items() if 'fc' not in k}
         model.load_state_dict(state_dict, strict=False)
     return model
+
+@_add_model
+def byol_res50x1(pretrained=True, num_classes=2):
+
+    model = ResNet(resnet.Bottleneck, [3, 4, 6, 3], num_classes=num_classes)
+    if pretrained:
+        state_dict = torch.load("pretrain_res50x1.pth.tar")
+        state_dict = {k: v for k, v in state_dict.items() if 'fc' not in k}
+        model.load_state_dict(state_dict, strict=False)
+    return model 
 
 
 def get_model(model_name, pretrained=False, num_classes=1000):
