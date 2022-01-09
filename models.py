@@ -84,6 +84,19 @@ def resnet34(pretrained=False, num_classes=1000):
     return model
 
 @_add_model
+def resnet50(pretrained=False, num_classes=1000):
+    """Constructs a ResNet-50 model.
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+    """
+    model = ResNet(resnet.Bottleneck, [3, 4, 6, 3], num_classes=num_classes)
+    if pretrained:
+        state_dict = model_zoo.load_url(resnet.model_urls['resnet50'])
+        state_dict = {k: v for k, v in state_dict.items() if 'fc' not in k}
+        model.load_state_dict(state_dict, strict=False)
+    return model
+
+@_add_model
 def byol_res50x1(pretrained=True, num_classes=2):
 
     model = ResNet(resnet.Bottleneck, [3, 4, 6, 3], num_classes=num_classes)
